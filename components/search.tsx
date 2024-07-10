@@ -7,42 +7,48 @@ import {
     CommandItem,
     CommandList,
 } from '@/components/command'
-import {SelectPokemon} from '@/drizzle/schema'
-import {MouseEvent, useEffect, useState} from 'react'
+import {SelectBook, SelectPokemon} from '@/drizzle/schema'
+import {useEffect, useState} from 'react'
 import {useDebounce} from 'use-debounce'
 
 export interface SearchProps {
-    searchPokedex: (
+    /*searchPokedex: (
         content: string, recommendations: Array<string>
     ) => Promise<
         Array<Pick<SelectPokemon, 'id' | 'name'>>
-    >,
-    recommendPokemon: (query: string[]) => Promise<Array<Pick<SelectPokemon, "id" | "name"> & { similarity: number }>>
+    >,*/
+    searchBooks: (
+        content: string, recommendations: Array<string>
+    ) => Promise<
+        Array<Pick<SelectBook, 'id' | 'title'>>
+    >
+    //recommendPokemon: (query: string[]) => Promise<Array<Pick<SelectPokemon, "id" | "name"> & { similarity: number }>>,
+    recommendBook: (query: string[]) => Promise<Array<Pick<SelectBook, "id" | "title"> & { similarity: number }>>
 }
 
 
-export function Search({searchPokedex, recommendPokemon}: SearchProps) {
+export function Search({searchBooks, recommendBook}: SearchProps) {
     const [query, setQuery] = useState('')
     const [searchResults, setSearchResults] = useState<
-        Array<Pick<SelectPokemon, 'id' | 'name'> & { similarity?: number }>
+        Array<Pick<SelectBook, 'id' | 'title'> & { similarity?: number }>
     >([])
     const [debouncedQuery] = useDebounce(query, 150)
-    const [chosenPokemons, setChosenPokemons] = useState<string[]>([''])
+    const [chosenBooks, setChosenBooks] = useState<string[]>([''])
     const [recommendations, setRecommendations] = useState<
-        Array<Pick<SelectPokemon, 'id' | 'name'> & { similarity?: number }>
+        Array<Pick<SelectBook, 'id' | 'title'> & { similarity?: number }>
     >([])
-    function addPokemon(name: string) {
+    function addBook(title: string) {
         console.log("!!!")
-        setChosenPokemons([...chosenPokemons, name].filter(function(item, pos, self) {return pos == self.indexOf(item)}))
-        console.log(chosenPokemons)
+        setChosenBooks([...chosenBooks, title].filter(function(item, pos, self) {return pos == self.indexOf(item)}))
+        console.log(chosenBooks)
     }
     useEffect(() => {
-        recommendPokemon(chosenPokemons).then((results) => {
+        recommendBook(chosenBooks).then((results) => {
             setRecommendations(results)
         })
         let current = true
         if (debouncedQuery.trim().length > 0) {
-            searchPokedex(debouncedQuery,chosenPokemons).then((results) => {
+            searchBooks(debouncedQuery,chosenBooks).then((results) => {
                 if (current) {
                     console.log(results)
                     setSearchResults(results)
@@ -52,7 +58,7 @@ export function Search({searchPokedex, recommendPokemon}: SearchProps) {
         return () => {
             current = false
         }
-    }, [debouncedQuery, searchPokedex, recommendPokemon, chosenPokemons])
+    }, [debouncedQuery, searchBooks, recommendBook, chosenBooks])
 
     return (
         <div className="w-full">
@@ -66,10 +72,10 @@ export function Search({searchPokedex, recommendPokemon}: SearchProps) {
                 />
                 <CommandList>
                     <CommandEmpty>No results found.</CommandEmpty>
-                    {searchResults.map((pokemon) => (
+                    {searchResults.map((book) => (
                         <CommandItem
-                            key={pokemon.id}
-                            value={pokemon.name}
+                            key={book.id}
+                            value={book.title}
                             className="flex items-center justify-between py-3"
                             onSelect={(value) => {
                                 console.log('Selected', value)
@@ -78,14 +84,14 @@ export function Search({searchPokedex, recommendPokemon}: SearchProps) {
                             <div className="flex items-center space-x-4">
                                 <div className="space-y-1">
                                     <p className="text-sm text-gray-800">
-                                        {pokemon.name.substring(0, 90)}
+                                        {book.title.substring(0, 90)}
                                     </p>
                                 </div>
                             </div>
                             <div className="text-sm text-gray-800">
                                 <button // Add button here
                                     className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-                                    onClick={() => addPokemon(pokemon.name)}
+                                    onClick={() => addBook(book.title)}
                                 >
                                     Add
                                 </button>
@@ -94,14 +100,15 @@ export function Search({searchPokedex, recommendPokemon}: SearchProps) {
                     ))}
                 </CommandList>
             </Command>
+            <br></br>
             <p>Some Recommendations</p>
             <Command label="Command Menu" shouldFilter={false} className="h-[200px]">
                 <CommandList>
                     <CommandEmpty>No results found.</CommandEmpty>
-                    {recommendations.map((pokemon) => (
+                    {recommendations.map((book) => (
                         <CommandItem
-                            key={pokemon.id}
-                            value={pokemon.name}
+                            key={book.id}
+                            value={book.title}
                             className="flex items-center justify-between py-3"
                             onSelect={(value) => {
                                 console.log('Selected', value)
@@ -111,21 +118,21 @@ export function Search({searchPokedex, recommendPokemon}: SearchProps) {
                             <div className="flex items-center space-x-4">
                                 <div className="space-y-1">
                                     <p className="text-sm text-gray-800">
-                                        {pokemon.name.substring(0, 90)}
+                                        {book.title.substring(0, 90)}
                                     </p>
                                 </div>
                             </div>
                             <div className="text-sm text-gray-800">
-                                {pokemon.similarity ? (
+                                {book.similarity ? (
                                     <div className="text-xs font-mono p-0.5 rounded bg-zinc-100">
-                                        {pokemon.similarity.toFixed(3)}
+                                        {book.similarity.toFixed(3)}
                                     </div>
                                 ) : (
                                     <div/>
                                 )}
                                 <button // Add button here
                                     className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-                                    onClick={() => addPokemon(pokemon.name)}
+                                    onClick={() => addBook(book.title)}
                                 >
                                     Add
                                 </button>
@@ -134,18 +141,19 @@ export function Search({searchPokedex, recommendPokemon}: SearchProps) {
                     ))}
                 </CommandList>
             </Command>
+            <br></br>
             <p>Your Chosen Pokemon</p>
             <Command label="Command Menu" shouldFilter={false} className="h-[200px]">
                 <CommandList>
                     <CommandEmpty>No results found.</CommandEmpty>
-                    {chosenPokemons.map((pokemon) => (
+                    {chosenBooks.map((book) => (
                         <CommandItem
-                            key={pokemon}
+                            key={book}
                         >
                             <div className="flex items-center space-x-4">
                                 <div className="space-y-1">
                                     <p className="text-sm text-gray-800">
-                                        {pokemon}
+                                        {book}
                                     </p>
                                 </div>
                             </div>

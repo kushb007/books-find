@@ -14,6 +14,3 @@ It leverages semantic analysis to suggest books similar to the one you choose. B
 ## Demo
 
 https://books.kushbhagat.xyz
-
-
-Built with a Next.js template
