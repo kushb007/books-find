@@ -4,16 +4,6 @@ import { pokemons, books } from './schema'
 import { eq } from 'drizzle-orm'
 import { openai } from '../lib/openai'
 import pokemon from './pokemon-with-embeddings.json'
-import book_1 from './part_1.json'
-import book_2 from './part_2.json'
-import book_3 from './part_3.json'
-import book_4 from './part_4.json'
-import book_5 from './part_5.json'
-import book_6 from './part_6.json'
-import book_7 from './part_7.json'
-import book_8 from './part_8.json'
-import book_9 from './part_9.json'
-import book_10 from './part_10.json'
 import { embed } from 'ai'
 
 if (!process.env.OPENAI_API_KEY) {
@@ -79,15 +69,6 @@ async function main() {
   //   JSON.stringify({ data }, null, 2),
   // );
   console.log('Pokédex seeded successfully!')
-  storeBooks(book_1)
-  storeBooks(book_2)
-  storeBooks(book_3)
-  storeBooks(book_4)
-  storeBooks(book_5)
-  storeBooks(book_6)
-  storeBooks(book_7)
-  storeBooks(book_8)
-  storeBooks(book_9)
 }
 main()
   .then(async () => {
