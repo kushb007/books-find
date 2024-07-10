@@ -21,7 +21,7 @@ This project is a book recommendation engine built with Next.js (React) and Type
 It leverages semantic analysis to suggest books similar to the one you choose. Book information is listed and summarized by AI. Select a book like ```Bulbasaur``` and get similar books 
 ## Getting Started
 
-- Clone the repository: git clone https://github.com/<your-username>/book-recommendation-engine.git
+- Clone the repository: git clone https://github.com/kushb007/books-find.git
 - Install dependencies: npm install
 - Start the development server: npm run dev
 - Open in your browser: http://localhost:3000
@@ -29,7 +29,7 @@ It leverages semantic analysis to suggest books similar to the one you choose. B
 
 ## Demo
 
-https://postgres-pgvector.vercel.app/
+https://books.kushbhagat.xyz
 
 
 Built with a Next.js template
