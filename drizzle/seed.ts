@@ -88,10 +88,8 @@ async function main() {
         embedding,
       })
       .where(eq(books.id, book.id))
-
-    console.log(`Added ${book.id} ${book.title}`)
-
   }
+  console.log('Books seeded successfully!')
 }
 main()
   .then(async () => {
