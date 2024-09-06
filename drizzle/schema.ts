@@ -1,5 +1,4 @@
 import {
-    bigint,
     boolean,
     index,
     integer,
@@ -50,7 +49,7 @@ export const books = pgTable(
       .$defaultFn(() => randomUUID()),
     bookID: integer('bookID').notNull().default(0),
     index: integer('index').notNull().default(0),
-    num_pages: integer('num_pages').notNull().default(0),
+    num_pages: integer('num_pages'),
     isbn: text('isbn').notNull().default(''),
     isbn13: text('isbn13').notNull().default(''),
     authors: text('authors').notNull().default(''),
