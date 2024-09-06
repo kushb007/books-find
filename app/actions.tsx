@@ -25,8 +25,15 @@ export async function searchBooks(
   query: string, chosenBooks: Array<string>
 ): Promise<Array<Pick<SelectBook, 'id' | 'title'>>> {
   try {
+
     console.log("searching...")
     if (query.trim().length === 0) return []
+    if(chosenBooks.length==0){
+      return await db
+      .select()
+      .from(books)
+      .where(and(sql`to_tsvector('english', ${books.title}) @@ websearch_to_tsquery('english', ${query})`));
+    }
     return await db
   .select()
   .from(books)
@@ -83,6 +90,7 @@ export async function recommendBook(
   try {
     console.log("recommending...")
     let embedding = new Array(512).fill(0)
+    if(chosenBooks.length==0) return []
     const selectObjects = await db
         .select({title: books.title, embedding: books.embedding})
         .from(books)
@@ -93,10 +101,6 @@ export async function recommendBook(
         if (selectEmbedding!=null) {
             for (let i = 0; i<512; i++) {
               embedding[i] = embedding[i]+selectEmbedding[i]
-              if(embedding.some(isNaN)){
-                console.log("NaN found in embedding")
-                embedding = embedding.map(value => isNaN(value) ? 0 : value);
-              }
             }
         }
     }

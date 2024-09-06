@@ -3,6 +3,7 @@ import ExpandingArrow from '@/components/expanding-arrow'
 import { Search } from '@/components/search'
 import Image from 'next/image'
 import Link from 'next/link'
+import './global.css'
 
 export default function Home() {
   return (
@@ -11,7 +12,6 @@ export default function Home() {
       <h1 className="pt-4 pb-8 bg-gradient-to-br from-black via-[#171717] to-[#575757] bg-clip-text text-center text-4xl font-medium tracking-tight text-transparent md:text-7xl">
         Book Search
       </h1>
-      <div className="bg-white/30 p-6 lg:p-12 shadow-xl ring-1 ring-gray-900/5 rounded-lg backdrop-blur-lg max-w-xl mx-auto w-full">
         <div className="flex justify-between items-center mb-4">
           <div className="space-y-1">
             <h2 className="text-xl font-semibold">
@@ -26,7 +26,6 @@ export default function Home() {
         <div className="divide-y divide-gray-900/5">
           <Search searchBooks={searchBooks} recommendBook={recommendBook}/>
         </div>
-      </div>
       <p className="font-light text-gray-600 w-full max-w-lg text-center mt-6">
         <Link
           href="https://vercel.com/postgres"

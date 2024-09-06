@@ -7,9 +7,10 @@ import {
     CommandItem,
     CommandList,
 } from '@/components/command'
-import {SelectBook, SelectPokemon} from '@/drizzle/schema'
-import {useEffect, useState} from 'react'
+import {SelectBook} from '@/drizzle/schema'
+import React, {useEffect, useState} from 'react'
 import {useDebounce} from 'use-debounce'
+import {Tabs, Tab, Card, CardBody} from "@nextui-org/react";
 
 export interface SearchProps {
     /*searchPokedex: (
@@ -33,15 +34,20 @@ export function Search({searchBooks, recommendBook}: SearchProps) {
         Array<Pick<SelectBook, 'id' | 'title'> & { similarity?: number }>
     >([])
     const [debouncedQuery] = useDebounce(query, 150)
-    const [chosenBooks, setChosenBooks] = useState<string[]>([''])
+    const [chosenBooks, setChosenBooks] = useState<string[]>([])
     const [recommendations, setRecommendations] = useState<
         Array<Pick<SelectBook, 'id' | 'title'> & { similarity?: number }>
     >([])
+    const [selectedBook, setSelectedBook] = useState<string>('')
     function addBook(title: string) {
         console.log("!!!")
         setChosenBooks([...chosenBooks, title].filter(function(item, pos, self) {return pos == self.indexOf(item)}))
         console.log(chosenBooks)
     }
+
+    //tabs!!!!
+
+
     useEffect(() => {
         recommendBook(chosenBooks).then((results) => {
             setRecommendations(results)
@@ -50,14 +56,15 @@ export function Search({searchBooks, recommendBook}: SearchProps) {
         if (debouncedQuery.trim().length > 0) {
             searchBooks(debouncedQuery,chosenBooks).then((results) => {
                 if (current) {
-                    console.log(results)
                     setSearchResults(results)
                 }
             })
         }
+        console.log("selectedBook: ", selectedBook)
         return () => {
             current = false
         }
+
     }, [debouncedQuery, searchBooks, recommendBook, chosenBooks])
 
     return (
@@ -77,10 +84,7 @@ export function Search({searchBooks, recommendBook}: SearchProps) {
                             key={book.id}
                             value={book.title}
                             className="flex items-center justify-between py-3"
-                            onSelect={(value) => {
-                                console.log('Selected', value)
-                                //addPokemon(value)
-                            }}>
+                        >
                             <div className="flex items-center space-x-4">
                                 <div className="space-y-1">
                                     <p className="text-sm text-gray-800">
@@ -110,10 +114,6 @@ export function Search({searchBooks, recommendBook}: SearchProps) {
                             key={book.id}
                             value={book.title}
                             className="flex items-center justify-between py-3"
-                            onSelect={(value) => {
-                                console.log('Selected', value)
-                                //addPokemon(value)
-                            }}
                         >
                             <div className="flex items-center space-x-4">
                                 <div className="space-y-1">
@@ -142,25 +142,21 @@ export function Search({searchBooks, recommendBook}: SearchProps) {
                 </CommandList>
             </Command>
             <br></br>
-            <p>Your Chosen Pokemon</p>
-            <Command label="Command Menu" shouldFilter={false} className="h-[200px]">
-                <CommandList>
-                    <CommandEmpty>No results found.</CommandEmpty>
+            <p>Your Chosen Books</p>
+            <h2>{selectedBook}</h2>
+            <div className="flex w-full flex-col">
+                <Tabs aria-label="Options" isVertical={true}>
                     {chosenBooks.map((book) => (
-                        <CommandItem
-                            key={book}
-                        >
-                            <div className="flex items-center space-x-4">
-                                <div className="space-y-1">
-                                    <p className="text-sm text-gray-800">
-                                        {book}
-                                    </p>
-                                </div>
-                            </div>
-                        </CommandItem>
+                        <Tab key={book} title={book}>
+                            <Card>
+                                <CardBody>
+                                    <p>Book: {book}</p>
+                                </CardBody>
+                            </Card>
+                        </Tab>
                     ))}
-                </CommandList>
-            </Command>
+                </Tabs>
+            </div>
         </div>
     )
 }

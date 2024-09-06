@@ -1,19 +1,12 @@
-import './globals.css'
-import { Inter } from 'next/font/google'
+import {Providers} from "./providers";
 
 
 export const metadata = {
-  metadataBase: new URL('https://postgres-pgvector.vercel.app'),
+  metadataBase: new URL('https://books-find.vercel.app'),
   title: 'Books-Find',
   description:
     '📕🔎🔥',
 }
-
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin'],
-  display: 'swap',
-})
 
 export default function RootLayout({
   children,
@@ -22,7 +15,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.variable}>{children}</body>
+      <body>
+        <Providers>
+            {children}
+        </Providers>
+      </body>
     </html>
   )
 }
