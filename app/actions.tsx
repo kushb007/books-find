@@ -2,8 +2,7 @@
 
 import { db } from '@/drizzle/db'
 import {SelectPokemon, pokemons, SelectBook, books} from '@/drizzle/schema'
-import {desc, sql, cosineDistance, gt, eq, and, notInArray, inArray} from 'drizzle-orm'
-import {randomUUID} from "crypto";
+import {desc, sql, cosineDistance, gt, and, notInArray, inArray} from 'drizzle-orm'
 
 export async function searchPokedex(
   query: string, chosenPokemons: Array<string>
